@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val sensormanager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
         val listOfSensors = sensormanager.getSensorList(Sensor.TYPE_ALL)
         listOfSensors.forEach {
             Log.e("TAG", "--------------")
@@ -44,12 +44,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Log.e("TAG", "--------------")
         }
 
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val sensormanager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val gravitysensor =sensormanager.getDefaultSensor(TYPE_GRAVITY)
         val accelerometer =sensormanager.getDefaultSensor(TYPE_ACCELEROMETER)
         sensormanager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_UI)
         sensormanager.registerListener(this,gravitysensor,SensorManager.SENSOR_DELAY_UI)
-
     }
+
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
@@ -73,5 +80,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
 
-
+    override fun onStop() {
+        super.onStop()
+        val sensorManager
+                = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensorManager.unregisterListener(this)
+    }
 }
